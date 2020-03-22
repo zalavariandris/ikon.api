@@ -35,7 +35,7 @@ app.get("/api/artist/:id/exhibitions", (req, res, next)=>{
 });
 
 app.get("/api/artist/:id/graph", (req, res, next)=>{
-
+  res.json(Artist.graph(req.params.id));
 });
 
 // EXHIBITION
