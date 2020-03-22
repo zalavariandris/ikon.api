@@ -9,9 +9,9 @@ var Gallery  = require('./models/gallery.js')
 app.use(cors())
 
 // Server Port
-var HTTP_PORT = 3000
-app.listen(HTTP_PORT, () => {
-  console.log(`Server running on port ${HTTP_PORT}`);
+const port = process.env.PORT || 3000
+app.listen(port, () => {
+  console.log(`Server running on port ${port}`);
 });
 
 // Root endpoint
