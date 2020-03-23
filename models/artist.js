@@ -99,11 +99,11 @@ function graph(id){
 
   for(let path of paths){
     if(!G.hasNode('a'+path[0]))
-      G.addNode('a'+path[0], {color:'red'})
+      G.addNode('a'+path[0], {type:'artist'})
     if(!G.hasNode('e'+path[1]))
-      G.addNode('e'+path[1], {color:'yellow'})
+      G.addNode('e'+path[1], {type:'exhibition'})
     if(!G.hasNode('a'+path[2]))
-      G.addNode('a'+path[2], {color:'lightblue'})
+      G.addNode('a'+path[2], {type:'artist'})
     
     if(!G.hasEdge('a'+path[0], 'e'+path[1]))
       G.addEdge('a'+path[0], 'e'+path[1])
@@ -135,13 +135,6 @@ function graph(id){
     G.setNodeAttribute(n, 'degreeCentrality', degree/sumDegree);
   }
 
-  // set node visual attributes
-  for(let n of G.nodes()){
-    let degreeCentrality = G.getNodeAttribute(n, 'degree');
-    let defaultSize = 40;
-    G.setNodeAttribute(n, 'size', n[0]=='a' ? Math.log1p(degreeCentrality**3)*20 : defaultSize);
-  }
-
   // remove leaf nodes
   G = subGraph(G, G.nodes().filter( (n)=> G.degree(n)>1) );
 
@@ -159,8 +152,10 @@ function graph(id){
   WHERE id IN (${Array(artist_ids.length).fill('?').join(',')})
   `)
   .all(artist_ids)
-  .forEach( (row)=>{
-    G.setNodeAttribute('a'+row.id, 'label', row.name);
+  .forEach( (artist)=>{
+    G.mergeNodeAttributes('a'+artist.id, {
+      name: artist.name
+    });
   });
 
 
@@ -177,9 +172,11 @@ function graph(id){
     FROM exhibitions 
     WHERE ikonid IN (${Array(exhibition_ids.length).fill('?').join(',')})`)
   .all(exhibition_ids)
-  .forEach( (row)=>{
-    G.setNodeAttribute('e'+row.ikonid, 'label', row.title);
-    G.setNodeAttribute('e'+row.ikonid, 'isExhibition', row.isExhibition);
+  .forEach( (exhibition)=>{
+    G.mergeNodeAttributes('e'+exhibition.ikonid, {
+      title: exhibition.title,
+      isExhibition: exhibition.isExhibition
+    })
   });
 
   // drop leaf nodes
