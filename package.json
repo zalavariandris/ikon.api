@@ -12,7 +12,7 @@
   "dependencies": {
     "better-sqlite3": "^6.0.1",
     "cors": "^2.8.5",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "graphology": "^0.16.1",
     "graphology-utils": "^1.7.0",
     "md5": "^2.2.1"
